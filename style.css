@@ -1,0 +1,251 @@
+/* Custom overrides for improved UI and responsiveness */
+/* Thay đổi một số biến màu để dễ nhìn hơn trên nền tối */
+:root {
+  --container-bg: rgba(10, 25, 47, 0.7);
+  /* Updated quantum theme: primary green and red colors */
+  --cyan: #00ff00;
+  --yellow: #ff0000;
+}
+
+/* Điều chỉnh vùng đăng nhập trên thiết bị di động */
+@media (max-width: 640px) {
+  #auth-content {
+    padding: 20px 15px;
+    max-width: 90%;
+  }
+}
+
+/* Thay đổi con trỏ mặc định để thân thiện hơn */
+body {
+  cursor: default;
+}
+/* --- Hard-disable redundant panels (history & next-prediction) in Soi Hủ core --- */
+#history-section, #prediction-section, #history-list, #prediction-list {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+}
+
+/* --- Hard-disable 'DỰ ĐOÁN 3 VÁN TIẾP THEO' section in Soi Hủ --- */
+#analysis-next-predictions { display: none !important; }
+
+
+/* Performance: virtualize long containers */
+.cv-auto{content-visibility:auto;contain-intrinsic-size:800px 600px;}
+
+/* ===== FIX OVERLAP 2025-08-10 (HOA) ===== */
+:root{
+  --footer-h: 96px;            /* approximate total height of footer (button + copyright) */
+  --footer-gap: 12px;
+}
+/* Keep footer on top of banners and content */
+#main-footer{
+  z-index: 1000 !important;
+}
+/* Reserve space so content doesn't hide under the footer */
+#authScreen,
+#aiCoreSelectionScreen{
+  padding-bottom: calc(var(--footer-h) + var(--footer-gap) + env(safe-area-inset-bottom, 0px)) !important;
+}
+/* Allow the core-selection screen to scroll independently on mobile */
+#aiCoreSelectionScreen{
+  overflow-y: auto !important;
+}
+/* Keep the promo banner from colliding with footer */
+#promo-banner{
+  margin-bottom: calc(var(--footer-h) + var(--footer-gap)) !important;
+}
+/* ===== END FIX OVERLAP ===== */
+
+/* ===== FIX CORE SELECTOR CROPPING (2025-08-10) ===== */
+/* Active card is scaled up, so let the container breathe and avoid clipping */
+#core-selector-container{
+  height: clamp(420px, 62vh, 560px) !important;
+  overflow: visible !important; /* allow scaled card to show fully */
+}
+
+/* Slightly reduce active scale to fit smaller viewports better */
+.core-card.active{
+  transform: translateX(0) scale(1.06) !important;
+}
+
+/* Ensure description can wrap and is visible */
+.core-card { 
+  overflow: visible !important;
+}
+
+/* Mobile tweaks */
+@media (max-width: 640px){
+  #core-selector-container{
+    height: clamp(380px, 65vh, 520px) !important;
+  }
+  .core-card{
+    width: 260px !important;
+    height: 350px !important; /* keep readable proportions */
+  }
+}
+/* ===== END FIX ===== */
+
+/* ===== MOBILE BREAKPOINTS for CORE SELECTOR (2025-08-10) ===== */
+
+/* Mobile chung (≤640px) */
+@media (max-width: 640px){
+  #core-selector-container{
+    height: clamp(380px, 65dvh, 520px) !important;
+    overflow: visible !important;
+  }
+  .core-card{
+    width: 260px !important;
+    height: 350px !important;
+  }
+  .core-card.active{ transform: translateX(0) scale(1.06) !important; }
+}
+
+/* Nhỏ (≤360px) */
+@media (max-width: 360px){
+  #core-selector-container{ height: clamp(360px, 62dvh, 500px) !important; }
+  .core-card{ width: 240px !important; height: 330px !important; }
+  .core-card.active{ transform: translateX(0) scale(1.04) !important; }
+}
+
+/* Vừa (361–400px) */
+@media (min-width:361px) and (max-width:400px){
+  #core-selector-container{ height: clamp(380px, 64dvh, 520px) !important; }
+  .core-card{ width: 250px !important; height: 340px !important; }
+}
+
+/* Lớn (401–480px) */
+@media (min-width:401px) and (max-width:480px){
+  #core-selector-container{ height: clamp(420px, 66dvh, 560px) !important; }
+  .core-card{ width: 270px !important; height: 360px !important; }
+}
+
+/* ===== END MOBILE BREAKPOINTS ===== */
+
+/* ===========================================================================
+ * Custom mobile improvements (2025‑08‑27)
+ *
+ * The original project included a draggable chat robot, an embedded YouTube
+ * player and a full‑screen video background for the Soi Hủ core. These
+ * features are very heavy on low‑power mobile devices and contribute to
+ * stuttering and long load times. To ensure a smooth 60 FPS experience on
+ * phones and small tablets we hide the chat interface entirely, disable the
+ * video playback surfaces and reduce expensive background animations. In
+ * addition, the login form and AI core selection cards are scaled down on
+ * narrow viewports to avoid overflowing the screen.
+ */
+
+/* Hide the draggable chat robot and chat window on all viewports. Even if
+   the underlying JavaScript attempts to remove the `hidden` class this
+   declaration overrides it and prevents the elements from ever being
+   displayed. */
+#chat-robot-container,
+#chat-window-container {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Remove the Soi Hủ video background. We keep the container in the DOM so
+   scripts referencing it do not error out, but prevent the iframe from
+   loading altogether. */
+#video-background-soihu iframe {
+  display: none !important;
+}
+
+/* Center the AI core selection screen content vertically. The default
+   implementation applies asymmetric padding which pushes the selector
+   towards the top of the screen. By enabling flexbox centering and
+   reducing the excess padding we ensure the core selector sits roughly
+   in the middle of the viewport on both desktop and mobile. */
+#aiCoreSelectionScreen {
+  justify-content: center !important;
+  padding-top: 60px !important;
+  padding-bottom: 80px !important;
+}
+
+@media (max-width: 640px) {
+  #aiCoreSelectionScreen {
+    padding-top: 40px !important;
+    padding-bottom: 60px !important;
+  }
+  /* On small devices shrink the login panel further to avoid overwhelming the
+     viewport. The width is capped as a percentage of the available
+     space rather than a fixed pixel width so it scales appropriately
+     across various phone sizes. */
+  #auth-content {
+    max-width: 85% !important;
+  }
+
+  /* Scale down the AI core selector cards slightly on mobile to ensure
+     they fit comfortably on the screen without horizontal overflow. */
+  .core-card {
+    width: 240px !important;
+    height: 330px !important;
+  }
+}
+
+/* Extra small phones (≤360px) receive a slightly smaller card and login
+   panel. */
+@media (max-width: 360px) {
+  #auth-content {
+    max-width: 90% !important;
+  }
+  .core-card {
+    width: 220px !important;
+    height: 300px !important;
+  }
+}
+
+
+/* Disable the animated neon gradient background on small screens. This
+   animation is visually impressive but requires continuous repainting and
+   consumes CPU/GPU resources. On mobile devices we turn it off to improve
+   performance. */
+@media (max-width: 640px) {
+  body::before {
+    animation: none !important;
+    opacity: 0.3 !important;
+  }
+}
+
+/*
+ * The login card and core selector already have sensible default breakpoints
+ * defined in the original stylesheet. We avoid overriding their sizes here
+ * to prevent unintended layout issues on certain screen widths.
+ */
+
+/* ===========================================================================
+ * Custom desktop backgrounds (2025-09-05)
+ *
+ * The user requested to replace the default gradient backgrounds on the
+ * login screen and AI core selection screen with a specific image. To avoid
+ * impacting the mobile experience these changes are only applied on larger
+ * viewports (≥640 px). We override the entire background on both elements
+ * and hide the animated overlay (#dragon-tech-bg) so the new artwork is
+ * clearly visible.
+ *
+ * Note: the image file (`background.webp`) must reside in the same folder
+ * as index.html and style.css. If you move it elsewhere, update the URL
+ * accordingly.
+ */
+@media (min-width: 640px) {
+  /* Apply the custom image to the login screen. Use `!important`
+     to ensure it overrides earlier gradient definitions. */
+  #authScreen {
+    background: url('background.webp') center/cover no-repeat !important;
+  }
+  /* Hide the technological dragon overlay on desktop to avoid obscuring
+     the custom background. */
+  #dragon-tech-bg {
+    display: none !important;
+  }
+  /* Apply the same background to the AI core selection screen. This
+     container covers the entire viewport when visible. */
+  #aiCoreSelectionScreen {
+    background: url('background.webp') center/cover no-repeat !important;
+  }
+}
+
